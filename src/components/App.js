@@ -28,9 +28,6 @@ export default () => {
     setVideos(response.data.items);
     setSelectedVideo(response.data.items[0]);
   };
-  const onVideoSelect = (video) => {
-    setSelectedVideo(video);
-  };
 
   return (
     <div className="ui container">
@@ -42,7 +39,7 @@ export default () => {
             <VideoDetail video={selectedVideo} />
           </div>
           <div className="five wide column">
-            <VideoList videos={videos} onVideoSelect={onVideoSelect} />
+            <VideoList videos={videos} onVideoSelect={setSelectedVideo} />
           </div>
         </div>
       </div>
