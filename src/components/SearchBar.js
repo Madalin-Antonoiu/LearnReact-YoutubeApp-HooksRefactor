@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-export default ({ label, onSearchSubmit }) => {
+export default ({ label, onFormSubmit }) => {
   const [term, setTerm] = useState("");
   const onSubmit = (e) => {
     e.preventDefault();
-    onSearchSubmit(term);
+    onFormSubmit(term);
   };
 
   return (

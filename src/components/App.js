@@ -1,37 +1,20 @@
 import React, { useEffect, useState } from "react";
-import youtube from "../api/youtube";
-
 import SearchBar from "./SearchBar";
 import VideoList from "./VideoList";
 import VideoDetail from "./VideoDetail";
-
-const KEY = "AIzaSyCohs3GZKg8swYyucbWJV087xZTA-vO5yU";
+import useVideos from "../hooks/useVideos";
 
 export default () => {
-  const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videos, search] = useVideos("programming"); // my custom hook <3
 
   useEffect(() => {
-    onSearchSubmit("programming");
-  }, []); // componentDidMount
-  const onSearchSubmit = async (term) => {
-    const response = await youtube.get("/search", {
-      params: {
-        q: term,
-        part: "snippet",
-        maxResults: 5,
-        type: "video",
-        key: KEY
-      }
-    });
-
-    setVideos(response.data.items);
-    setSelectedVideo(response.data.items[0]);
-  };
+    setSelectedVideo(videos[0]);
+  }, [videos]);
 
   return (
     <div className="ui container">
-      <SearchBar onSearchSubmit={onSearchSubmit} label="Youtube Video Search" />
+      <SearchBar onFormSubmit={search} label="Youtube Video Search" />
 
       <div className="ui stackable grid">
         <div className="ui row">
