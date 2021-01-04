@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import youtube from "../api/youtube";
 
 import SearchBar from "./SearchBar";
@@ -7,14 +7,14 @@ import VideoDetail from "./VideoDetail";
 
 const KEY = "AIzaSyCohs3GZKg8swYyucbWJV087xZTA-vO5yU";
 
-class App extends React.Component {
-  state = { videos: [], selectedVideo: null };
+export default () => {
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
-  componentDidMount() {
-    this.onSearchSubmit("programming");
-  }
-
-  onSearchSubmit = async (term) => {
+  useEffect(() => {
+    onSearchSubmit("programming");
+  }, []); // componentDidMount
+  const onSearchSubmit = async (term) => {
     const response = await youtube.get("/search", {
       params: {
         q: term,
@@ -25,39 +25,27 @@ class App extends React.Component {
       }
     });
 
-    //console.log(response);
-    this.setState({
-      videos: response.data.items,
-      selectedVideo: response.data.items[0]
-    });
+    setVideos(response.data.items);
+    setSelectedVideo(response.data.items[0]);
+  };
+  const onVideoSelect = (video) => {
+    setSelectedVideo(video);
   };
 
-  onVideoSelect = (video) => {
-    //console.log("From the App!", video); // - When i click a video, it logs
-    this.setState({ selectedVideo: video });
-  };
+  return (
+    <div className="ui container">
+      <SearchBar onSearchSubmit={onSearchSubmit} label="Youtube Video Search" />
 
-  render() {
-    return (
-      <div className="ui container">
-        <SearchBar data={this.onSearchSubmit} label="Youtube Video Search" />
-
-        <div className="ui stackable grid">
-          <div className="ui row">
-            <div className="eleven wide column">
-              <VideoDetail video={this.state.selectedVideo} />
-            </div>
-            <div className="five wide column">
-              <VideoList
-                videos={this.state.videos}
-                onVideoSelect={this.onVideoSelect}
-              />
-            </div>
+      <div className="ui stackable grid">
+        <div className="ui row">
+          <div className="eleven wide column">
+            <VideoDetail video={selectedVideo} />
+          </div>
+          <div className="five wide column">
+            <VideoList videos={videos} onVideoSelect={onVideoSelect} />
           </div>
         </div>
       </div>
-    );
-  }
-}
-
-export default App;
+    </div>
+  );
+};

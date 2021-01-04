@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 
-export default ({ label, data }) => {
+export default ({ label, onSearchSubmit }) => {
   const [term, setTerm] = useState("");
-
   const onSubmit = (e) => {
-    //console.log(this.state.term);
     e.preventDefault();
-
-    //pass it as props to the parent
-    data(term);
+    onSearchSubmit(term);
   };
 
   return (
